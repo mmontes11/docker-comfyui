@@ -41,6 +41,8 @@ RUN apt-get update && apt-get install -y \
     libgl1 \
     libglib2.0-0 \
     ffmpeg \
+    curl \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip to latest version
@@ -144,10 +146,3 @@ EXPOSE 8188
 
 # Use startup script as entrypoint
 ENTRYPOINT ["/app/startup.sh"]
-
-# Default command - can be overridden in docker-compose.yml
-CMD if [ "$SAGEATTENTION_USE" != "0" ] && { [ "$SAGEATTENTION_VERSION" = "v2" ] || [ "$SAGEATTENTION_VERSION" = "v3" ]; }; then \
-      exec python3 main.py --listen 0.0.0.0 --use-sage-attention; \
-    else \
-      exec python3 main.py --listen 0.0.0.0; \
-    fi
