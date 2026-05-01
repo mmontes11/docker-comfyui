@@ -36,7 +36,7 @@ jobs:
       - name: Get ComfyUI Version
         id: version
         run: |
-          VERSION=$(grep -oP 'ARG COMFYUI_VERSION=\K[0-9]+\.[0-9]+\.[0-9]+' Dockerfile)
+          VERSION=$(grep -oP 'ARG COMFYUI_VERSION=v?\K[0-9]+\.[0-9]+\.[0-9]+' Dockerfile)
           echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
           echo "Extracted version: ${VERSION}"
 
