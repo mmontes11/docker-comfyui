@@ -6,7 +6,7 @@ ARG CUDA_BASE_IMAGE=nvidia/cuda:13.1.0-devel-ubuntu24.04
 ARG TORCH_WHEEL_URL=https://download.pytorch.org/whl/cu130/torch-2.10.0%2Bcu130-cp312-cp312-manylinux_2_28_x86_64.whl
 ARG TORCHVISION_WHEEL_URL=https://download.pytorch.org/whl/cu130/torchvision-0.25.0%2Bcu130-cp312-cp312-manylinux_2_28_x86_64.whl
 ARG TORCHAUDIO_WHEEL_URL=https://download.pytorch.org/whl/cu130/torchaudio-2.10.0%2Bcu130-cp312-cp312-manylinux_2_28_x86_64.whl
-ARG COMFYUI_BRANCH=master
+ARG COMFYUI_VERSION=v0.20.1
 ARG SAGEATTENTION_VERSION=v2
 ARG SAGEATTENTION_USE=1
 ARG TORCH_CUDA_ARCH_LIST=12.0
@@ -17,7 +17,7 @@ ARG SAGEATTENTION_VERSION
 ARG TORCH_WHEEL_URL
 ARG TORCHVISION_WHEEL_URL
 ARG TORCHAUDIO_WHEEL_URL
-ARG COMFYUI_BRANCH
+ARG COMFYUI_VERSION
 ARG TORCH_CUDA_ARCH_LIST
 # Pass these to the runtime
 ENV SAGEATTENTION_VERSION=${SAGEATTENTION_VERSION}
@@ -52,8 +52,8 @@ RUN python3 -m pip install --upgrade pip
 WORKDIR /app
 
 # Clone ComfyUI repository
-ARG COMFYUI_BRANCH
-RUN git clone --branch ${COMFYUI_BRANCH} https://github.com/comfyanonymous/ComfyUI.git .
+ARG COMFYUI_VERSION
+RUN git clone --tag ${COMFYUI_VERSION} https://github.com/comfyanonymous/ComfyUI.git . && git checkout ${COMFYUI_VERSION}
 
 # Install PyTorch with CUDA 13.0 support
 # These specific wheels are critical for Blackwell GPU support
