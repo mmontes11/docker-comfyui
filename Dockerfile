@@ -53,7 +53,7 @@ WORKDIR /app
 
 # Clone ComfyUI repository
 ARG COMFYUI_VERSION
-RUN git clone --tag ${COMFYUI_VERSION} https://github.com/comfyanonymous/ComfyUI.git . && git checkout ${COMFYUI_VERSION}
+RUN git clone --branch ${COMFYUI_VERSION} https://github.com/comfyanonymous/ComfyUI.git .
 
 # Install PyTorch with CUDA 13.0 support
 # These specific wheels are critical for Blackwell GPU support
