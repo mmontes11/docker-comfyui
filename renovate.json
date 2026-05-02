@@ -1,9 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "forkProcessing": "enabled",
   "extends": [
     "config:recommended"
   ],
-  "forkProcessing": "enabled",
   "customManagers": [
     {
       "customType": "regex",
@@ -23,7 +23,9 @@
       "matchManagers": [
         "github-actions"
       ],
-      "automerge": true
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": false
     },
     {
       "matchDatasources": [
@@ -36,7 +38,9 @@
         "minor",
         "patch"
       ],
-      "automerge": true
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": false
     }
   ]
 }
