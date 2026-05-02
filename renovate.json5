@@ -17,7 +17,9 @@
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
-      "automerge": true
+      "automerge": true,
+      // see: https://docs.renovatebot.com/key-concepts/automerge/#absence-of-tests,
+      "ignoreTests": true
     },
     {
       "matchDatasources": ["github-releases"],
