@@ -129,11 +129,9 @@ RUN --mount=type=bind,source=.,target=/mnt/context,ro \
 RUN --mount=type=cache,target=/root/.cache/pip \
     MANAGER_VERSION=$(grep -oP 'comfyui_manager==\K[0-9.]+' /app/manager_requirements.txt) && \
     echo "Installing ComfyUI-Manager version: $MANAGER_VERSION" && \
-    git clone --branch $MANAGER_VERSION https://github.com/Comfy-Org/ComfyUI-Manager.git /tmp/comfyui-manager && \
-    mkdir -p /app/custom_nodes && \
-    cp -a /tmp/comfyui-manager/. /app/custom_nodes/ && \
-    pip install -r /app/manager_requirements.txt -c /app/constraints.txt && \
-    rm -rf /tmp/comfyui-manager
+    mkdir -p /app/custom_nodes/comfyui-manager/ && \
+    git clone --branch $MANAGER_VERSION https://github.com/Comfy-Org/ComfyUI-Manager.git /app/custom_nodes/comfyui-manager && \
+    pip install -r /app/manager_requirements.txt -c /app/constraints.txt
 
 # Create startup script that runs install.py for custom nodes
 # Some custom nodes need post-install setup that happens at runtime
