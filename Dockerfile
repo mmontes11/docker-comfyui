@@ -90,6 +90,12 @@ RUN if [ "$SAGEATTENTION_VERSION" != "none" ]; then \
 # Install base ComfyUI requirements
 RUN pip install -r requirements.txt -c /app/constraints.txt
 
+# Pin kornia to 0.7.1 (same as ComfyUI 0.20) to avoid kornia_rs illegal instruction.
+# kornia 0.7.1 does not require kornia_rs; versions 0.7.3+ require kornia-rs>=0.1.0
+# whose pre-built wheels may target CPU SIMD instructions (AVX2/AVX-512) not available
+# on all CPUs, causing "Illegal instruction" crashes at import time.
+RUN pip install 'kornia==0.7.1' -c /app/constraints.txt
+
 # Install additional wheels from wheels.txt if provided
 # This is where Nunchaku and other special packages go
 # The wheels.txt file should be in the build context
