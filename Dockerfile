@@ -27,7 +27,6 @@ ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST}
 ENV DEBIAN_FRONTEND=noninteractive
 # Allow pip to install in system Python (we're in a container, it's fine)
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
-ENV PIP_IGNORE_INSTALLED=1
 ENV PIP_NO_CACHE_DIR=1
 
 # Install system dependencies
@@ -64,11 +63,15 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     "${TORCHVISION_WHEEL_URL}" \
     "${TORCHAUDIO_WHEEL_URL}"
 
-# Create a constraints file to protect PyTorch versions
-# This prevents custom nodes from accidentally downgrading/upgrading PyTorch
+# Create a constraints file to protect PyTorch versions AND kornia
+# Pin kornia to 0.7.1 to avoid kornia_rs illegal instruction.
+# kornia 0.7.1 does not require kornia_rs; versions 0.7.3+ require kornia-rs>=0.1.0
+# whose pre-built wheels may target CPU SIMD instructions (AVX2/AVX-512) not available
+# on all CPUs, causing "Illegal instruction" crashes at import time.
 RUN echo "torch @ ${TORCH_WHEEL_URL}" > /app/constraints.txt && \
     echo "torchvision @ ${TORCHVISION_WHEEL_URL}" >> /app/constraints.txt && \
-    echo "torchaudio @ ${TORCHAUDIO_WHEEL_URL}" >> /app/constraints.txt
+    echo "torchaudio @ ${TORCHAUDIO_WHEEL_URL}" >> /app/constraints.txt && \
+    echo "kornia==0.7.1" >> /app/constraints.txt
 
 # Install SageAttention for improved attention mechanism performance
 # Triton is required for SageAttention's CUDA kernels
@@ -88,13 +91,8 @@ RUN if [ "$SAGEATTENTION_VERSION" != "none" ]; then \
     fi
 
 # Install base ComfyUI requirements
+# kornia is constrained to 0.7.1 via constraints.txt (avoids kornia-rs CPU instruction issues)
 RUN pip install -r requirements.txt -c /app/constraints.txt
-
-# Pin kornia to 0.7.1 (same as ComfyUI 0.20) to avoid kornia_rs illegal instruction.
-# kornia 0.7.1 does not require kornia_rs; versions 0.7.3+ require kornia-rs>=0.1.0
-# whose pre-built wheels may target CPU SIMD instructions (AVX2/AVX-512) not available
-# on all CPUs, causing "Illegal instruction" crashes at import time.
-RUN pip install 'kornia==0.7.1' -c /app/constraints.txt
 
 # Install additional wheels from wheels.txt if provided
 # This is where Nunchaku and other special packages go
