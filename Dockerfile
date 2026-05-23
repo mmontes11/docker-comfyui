@@ -27,6 +27,7 @@ ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST}
 ENV DEBIAN_FRONTEND=noninteractive
 # Allow pip to install in system Python (we're in a container, it's fine)
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
+ENV PIP_IGNORE_INSTALLED=1
 ENV PIP_NO_CACHE_DIR=1
 
 # Install system dependencies
