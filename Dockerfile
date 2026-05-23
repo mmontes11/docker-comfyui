@@ -7,7 +7,6 @@ ARG TORCH_WHEEL_URL=https://download.pytorch.org/whl/cu130/torch-2.10.0%2Bcu130-
 ARG TORCHVISION_WHEEL_URL=https://download.pytorch.org/whl/cu130/torchvision-0.25.0%2Bcu130-cp312-cp312-manylinux_2_28_x86_64.whl
 ARG TORCHAUDIO_WHEEL_URL=https://download.pytorch.org/whl/cu130/torchaudio-2.10.0%2Bcu130-cp312-cp312-manylinux_2_28_x86_64.whl
 ARG COMFYUI_VERSION=v0.22.0
-ARG COMFYUI_MANAGER_VERSION=4.2.1
 ARG SAGEATTENTION_VERSION=v2
 ARG SAGEATTENTION_USE=1
 ARG TORCH_CUDA_ARCH_LIST=12.0
@@ -19,7 +18,6 @@ ARG TORCH_WHEEL_URL
 ARG TORCHVISION_WHEEL_URL
 ARG TORCHAUDIO_WHEEL_URL
 ARG COMFYUI_VERSION
-ARG COMFYUI_MANAGER_VERSION
 ARG TORCH_CUDA_ARCH_LIST
 # Pass these to the runtime
 ENV SAGEATTENTION_VERSION=${SAGEATTENTION_VERSION}
@@ -122,10 +120,11 @@ RUN --mount=type=bind,source=.,target=/mnt/context,ro \
 
 # Install ComfyUI Manager - the official plugin manager for ComfyUI
 # This provides the "Manager" menu in ComfyUI for installing custom nodes
-# Version must match manager_requirements.txt in the ComfyUI repository:
-# https://github.com/Comfy-Org/ComfyUI/blob/master/manager_requirements.txt
+# Version is read from local manager_requirements.txt
 RUN --mount=type=cache,target=/root/.cache/pip \
-    git clone --branch 4.2.1 https://github.com/Comfy-Org/ComfyUI-Manager.git /tmp/comfyui-manager && \
+    MANAGER_VERSION=$(grep -oP 'comfyui_manager==\K[0-9.]+' /app/manager_requirements.txt) && \
+    echo "Installing ComfyUI-Manager version: $MANAGER_VERSION" && \
+    git clone --branch $MANAGER_VERSION https://github.com/Comfy-Org/ComfyUI-Manager.git /tmp/comfyui-manager && \
     mkdir -p /app/custom_nodes && \
     cp -a /tmp/comfyui-manager/. /app/custom_nodes/ && \
     pip install -r /app/manager_requirements.txt -c /app/constraints.txt && \
