@@ -9,7 +9,6 @@ services:
         - TORCHVISION_WHEEL_URL=${TORCHVISION_WHEEL_URL:-https://download.pytorch.org/whl/cu130/torchvision-0.25.0%2Bcu130-cp312-cp312-manylinux_2_28_x86_64.whl}
         - TORCHAUDIO_WHEEL_URL=${TORCHAUDIO_WHEEL_URL:-https://download.pytorch.org/whl/cu130/torchaudio-2.10.0%2Bcu130-cp312-cp312-manylinux_2_28_x86_64.whl}
         - COMFYUI_VERSION=${COMFYUI_VERSION:-v0.22.0}
-        - COMFYUI_MANAGER_VERSION=${COMFYUI_MANAGER_VERSION:-4.2.1}
         - SAGEATTENTION_VERSION=${SAGEATTENTION_VERSION:-v2}
         - SAGEATTENTION_USE=${SAGEATTENTION_USE:-1}
         - TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST:-12.0}
