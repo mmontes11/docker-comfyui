@@ -133,6 +133,11 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     git clone --branch $MANAGER_VERSION https://github.com/Comfy-Org/ComfyUI-Manager.git /app/custom_nodes/comfyui-manager && \
     pip install -r /app/manager_requirements.txt -c /app/constraints.txt
 
+# Install custom node requirements from remote URLs
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=bind,source=scripts/requirements.sh,target=/app/scripts/requirements.sh,ro \
+    bash /app/scripts/requirements.sh /app/constraints.txt
+
 # Create startup script that runs install.py for custom nodes
 # Some custom nodes need post-install setup that happens at runtime
 RUN echo '#!/bin/bash\n\
